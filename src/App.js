@@ -4,7 +4,7 @@ import Users from "./Users";
 import Home from "./Home";
 import Nav from "./Nav";
 import TopRanked from "./TopRanked";
-import Form from "./CreateUser";
+// import Form from "./CreateUser";
 import axios from "axios";
 
 class App extends Component {
@@ -13,6 +13,8 @@ class App extends Component {
     this.state = {
       users: []
     };
+    this.refreshUsers = this.refreshUsers.bind(this);
+    this.destroyUser = this.destroyUser.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +30,17 @@ class App extends Component {
       .get("/users")
       .then(res => res.data)
       .then(users => this.setState({ users }))
+      .catch();
+  }
+
+  destroyUser(id) {
+    axios
+      .delete(`/users/${id}`)
+      .then(() => {
+        let users = this.state.products;
+        users = users.filter(user => user.id !== id);
+        this.setState({ users });
+      })
       .catch();
   }
 
@@ -51,7 +64,7 @@ class App extends Component {
             render={({ history }) => (
               <Form refreshUsers={this.refreshUsers} history={history} />
             )}
-          />
+          /> 
         </Fragment>
       </Router>
     );
