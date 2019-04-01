@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-class Form extends Component {
+class UpdateForm extends Component {
   constructor() {
     super();
     this.state = {
@@ -13,8 +13,7 @@ class Form extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    console.log('props in CreatUser Form ', this.props);
-    console.log('history in CreatUser Form ', history);
+    console.log('props in UpdateUser Form ', this.props);
   }
 
   handleSubmit(evt) {

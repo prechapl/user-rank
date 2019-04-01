@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 class Users extends React.Component {
   render() {
-    console.log("props via Users ", this.props);
+    console.log('props via Users ', this.props);
 
     return (
       <div>
@@ -13,20 +13,25 @@ class Users extends React.Component {
                 <ul>
                   <li className="list-group-item ">
                     <div>{user.name}</div>
+                    <div>{user.bio}</div>
+                    <div>{user.rank}</div>
                     <div className="d-flex justify-content-end">
                       <button
                         className="btn btn-outline-danger btn-sm"
                         type="button"
-                        onClick={() => this.props.destroyUser(user.id)}
+                        onClick={() => this.props.destroy(user.id)}
                       >
                         Delete
                       </button>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        type="button"
+                        onClick={() => this.props.updateUser(user.id)}
+                      >
+                        Edit
+                      </button>
                     </div>
                   </li>
-                  {this.props.getRank(user)}
-                  {/* <div style={{ margin: '10px' }}>
-                    {this.props.availabilityCheck(user)}
-                  </div> */}
                 </ul>
               </li>
             );
