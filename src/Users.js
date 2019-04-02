@@ -3,8 +3,8 @@ import { withRouter } from 'react-router';
 
 class Users extends React.Component {
   render() {
-    console.log('props via Users ', this.props);
-    console.log('history via Users ', this.props.history);
+    // console.log('props via Users ', this.props);
+    // console.log('history via Users ', this.props.history);
 
     return (
       <div>

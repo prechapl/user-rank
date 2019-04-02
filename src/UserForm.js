@@ -4,6 +4,8 @@ import axios from 'axios';
 class Form extends Component {
   constructor(props) {
     super(props);
+    const user = this.props.userToUpdate(props.id);
+    // console.log('user in form state', user);
     if (!this.props.id) {
       this.state = {
         name: '',
@@ -11,7 +13,6 @@ class Form extends Component {
         rank: 0
       };
     } else {
-      const user = this.props.userToUpdate(this.props.id);
       this.state = {
         name: user.name,
         bio: user.bio,
@@ -23,7 +24,7 @@ class Form extends Component {
     this.handleUpdate = this.handleUpdate.bind(this);
 
     // console.log('props in Form ', this.props);
-    // console.log('history in Form ', history);
+    console.log('history in Form ', history);
     // console.log('this.props.id in Form ', this.props.id);
   }
 
@@ -59,7 +60,12 @@ class Form extends Component {
     const name = this.state.name;
     const bio = this.state.bio;
     const rank = this.state.rank;
-    console.log('props.id in Form render', this.props.id);
+    // console.log('props in Form render', this.props);
+    // console.log('state in Form render', this.state);
+    // console.log(
+    //   'userToUpdate in Form render',
+    //   this.props.userToUpdate(this.props.id)
+    // );
 
     return (
       <div>
@@ -70,7 +76,7 @@ class Form extends Component {
               className="form-control form-control-sm"
               name="name"
               onChange={this.handleChange}
-              value={name}
+              defaultValue={name}
               placeholder="enter name"
             />
           </div>
@@ -80,7 +86,7 @@ class Form extends Component {
               className="form-control form-control-sm"
               name="bio"
               onChange={this.handleChange}
-              value={bio}
+              defaultValue={bio}
             />
           </div>
           <div className="form-group">
@@ -89,7 +95,7 @@ class Form extends Component {
               className="form-control form-control-sm"
               name="rank"
               onChange={this.handleChange}
-              value={rank}
+              defaultValue={rank}
             />
           </div>
 

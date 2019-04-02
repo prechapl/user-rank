@@ -5,7 +5,6 @@ import Home from './Home';
 import Nav from './Nav';
 import TopRanked from './TopRanked';
 import Form from './UserForm';
-// import UpdateForm from './UpdateUser';
 import axios from 'axios';
 
 class App extends Component {
@@ -40,6 +39,7 @@ class App extends Component {
   userToUpdate(id) {
     const users = this.state.users.slice();
     const user = users.filter(_user => _user.id === id);
+    console.log('user in userToUpdate', user);
     return user;
   }
 
