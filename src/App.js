@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom';
-import Users from './Users';
-import Home from './Home';
-import Nav from './Nav';
-import TopRanked from './TopRanked';
-import Form from './UserForm';
-import axios from 'axios';
+import React, { Component, Fragment } from "react";
+import { HashRouter as Router, Route } from "react-router-dom";
+import Users from "./Users";
+import Home from "./Home";
+import Nav from "./Nav";
+import TopRanked from "./TopRanked";
+import Form from "./UserForm";
+import axios from "axios";
 
 class App extends Component {
   constructor() {
@@ -21,16 +21,16 @@ class App extends Component {
 
   componentDidMount() {
     axios
-      .get('/users')
+      .get("/users")
       .then(res => res.data)
       .then(users => this.setState({ users }))
-      .then(console.log('in app.js CDM', this.state.users))
+      .then(console.log("in app.js CDM", this.state.users))
       .catch();
   }
 
   refreshUsers() {
     axios
-      .get('/users')
+      .get("/users")
       .then(res => res.data)
       .then(users => this.setState({ users }))
       .catch();
@@ -39,8 +39,8 @@ class App extends Component {
   userToUpdate(id) {
     const users = this.state.users.slice();
     const user = users.filter(_user => _user.id === id);
-    console.log('user in userToUpdate', user);
-    return user;
+    console.log("user in userToUpdate", user);
+    return user[0];
   }
 
   destroyUser(id) {
@@ -110,6 +110,7 @@ class App extends Component {
                 history={history}
                 userToUpdate={this.userToUpdate}
                 id={match.params.id}
+                users={this.state.users}
               />
             )}
           />

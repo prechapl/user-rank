@@ -1,41 +1,43 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { Component } from "react";
+import axios from "axios";
 
 class Form extends Component {
   constructor(props) {
     super(props);
-    const user = this.props.userToUpdate(props.id);
+
     // console.log('user in form state', user);
-    if (!this.props.id) {
-      this.state = {
-        name: '',
-        bio: '',
-        rank: 0
-      };
-    } else {
-      this.state = {
-        name: user.name,
-        bio: user.bio,
-        rank: user.rank
-      };
-    }
+
+    this.state = {
+      name: "",
+      bio: "",
+      rank: 0
+    };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
 
     // console.log('props in Form ', this.props);
-    console.log('history in Form ', history);
+    console.log("history in Form ", history);
     // console.log('this.props.id in Form ', this.props.id);
+  }
+
+  componentDidUpdate(prevProps, nextProps) {
+    const users = this.props.users;
+    if (prevProps.id !== nextProps.id) {
+      const user = users.filter(_user => _user.id === this.props.id);
+      this.setState(user);
+    }
+    // console.log("user in userToUpdate", user);
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
     const { name, bio, rank } = this.state;
     axios
-      .post('/users', { name, bio, rank })
+      .post("/users", { name, bio, rank })
       .then(res => res.data)
-      // .then(res => console.log(res.data))
-      .then(() => this.props.history.push('/users'))
+      .then(() => this.props.history.push("/users"))
       .then(() => this.props.refreshUsers())
       .catch(e => console.log(e));
   }
@@ -46,13 +48,13 @@ class Form extends Component {
     axios
       .put(`/users/${this.props.id}`, { name, bio, rank })
       .then(res => res.data)
-      .then(() => this.props.history.push('/users'))
+      .then(() => this.props.history.push("/users"))
       .then(() => this.props.refreshUsers())
       .catch(e => console.log(e));
   }
 
   handleChange({ target }) {
-    console.log('target ', target.value);
+    console.log("target ", target.value);
     this.setState({ [target.name]: target.value });
   }
 
@@ -60,12 +62,6 @@ class Form extends Component {
     const name = this.state.name;
     const bio = this.state.bio;
     const rank = this.state.rank;
-    // console.log('props in Form render', this.props);
-    // console.log('state in Form render', this.state);
-    // console.log(
-    //   'userToUpdate in Form render',
-    //   this.props.userToUpdate(this.props.id)
-    // );
 
     return (
       <div>
