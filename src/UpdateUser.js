@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 
 class UpdateForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      name: '',
-      bio: '',
-      rank: 0
+      name: props.userToUpdate.name,
+      bio: props.userToUpdate.bio,
+      rank: props.userToUpdate.rank
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -79,4 +79,4 @@ class UpdateForm extends Component {
   }
 }
 
-export default Form;
+export default UpdateForm;

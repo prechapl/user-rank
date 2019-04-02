@@ -29,28 +29,6 @@ app.post('/users', (req, res, next) => {
     .catch(next);
 });
 
-// app.put('/users/:id', (req, res, next) => {
-//   User.update(
-//     {
-//       name: req.body.name,
-//       bio: req.body.bio,
-//       rank: req.body.rank
-//     },
-//     {
-//       where: { id: req.params.id }
-//     }
-//   )
-//     .then(() => User.findOne({ where: { id: req.params.id } }))
-//     .then(userToUpdate => {
-//       const succesMessage = {
-//         message: 'user updated successfully',
-//         user: userToUpdate
-//       };
-//       res.send(succesMessage);
-//     })
-//     .catch(next);
-// });
-
 app.delete('/users/:id', (req, res, next) => {
   User.destroy({ where: { id: req.params.id } });
   res.sendStatus(204);

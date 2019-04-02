@@ -4,8 +4,8 @@ import Users from './Users';
 import Home from './Home';
 import Nav from './Nav';
 import TopRanked from './TopRanked';
-import Form from './CreateUser';
-import UpdateForm from './UpdateUser';
+import Form from './UserForm';
+// import UpdateForm from './UpdateUser';
 import axios from 'axios';
 
 class App extends Component {
@@ -17,7 +17,7 @@ class App extends Component {
     this.refreshUsers = this.refreshUsers.bind(this);
     this.destroyUser = this.destroyUser.bind(this);
     this.getTopRanked = this.getTopRanked.bind(this);
-    this.updateUser = this.updateUser.bind(this);
+    this.userToUpdate = this.userToUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -25,7 +25,7 @@ class App extends Component {
       .get('/users')
       .then(res => res.data)
       .then(users => this.setState({ users }))
-      .then(console.log(this.state.users))
+      .then(console.log('in app.js CDM', this.state.users))
       .catch();
   }
 
@@ -37,20 +37,11 @@ class App extends Component {
       .catch();
   }
 
-  // updateUser(id) {
-  //   let users = this.state.users;
-  //   const idx = id - 1;
-  //   const userToUpdate = users.filter(user => user.id === id);
-  //   // users = users.filter(user => user.id !== id);
-  //   users.splice(idx, 1);
-  //   axios
-  //     .put(`/users/${id}`)
-  //     .then(req => console.log('req.body in updateUser', req.body))
-  //     .then(() => {
-  //       this.setState({ users });
-  //     })
-  //     .catch();
-  // }
+  userToUpdate(id) {
+    const users = this.state.users.slice();
+    const user = users.filter(_user => _user.id === id);
+    return user;
+  }
 
   destroyUser(id) {
     axios
@@ -65,8 +56,8 @@ class App extends Component {
 
   getTopRanked() {
     const users = this.state.users;
+    let topRank = 1000000;
     const highestRank = users.reduce((result, user) => {
-      let topRank = 1000000;
       if (user.rank <= topRank) {
         topRank = user.rank;
       }
@@ -79,7 +70,6 @@ class App extends Component {
   render() {
     const users = this.state.users;
     const topRanked = this.getTopRanked();
-    // console.log('topRanked in App render', topRanked);
 
     return (
       <Router>
@@ -93,7 +83,8 @@ class App extends Component {
               <Users
                 users={users}
                 destroy={this.destroyUser}
-                updateUser={this.updateUser}
+                userToUpdate={this.userToUpdate}
+                history={history}
               />
             )}
           />
@@ -111,12 +102,14 @@ class App extends Component {
             )}
           />
           <Route
-            path="/update"
-            render={({ history }) => (
-              <UpdateForm
+            exact
+            path="/users/:id"
+            render={({ history, match }) => (
+              <Form
                 refreshUsers={this.refreshUsers}
                 history={history}
-                updateUser={this.updateUser}
+                userToUpdate={this.userToUpdate}
+                id={match.params.id}
               />
             )}
           />

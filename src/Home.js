@@ -12,7 +12,7 @@ class Home extends React.Component {
         }}
       >
         <h4 style={{ margin: '10px' }}>
-          Welcome to Acme Users Ranked<i>by Preston</i>
+          Welcome to Acme Users Ranked<i> by Preston</i>
         </h4>
         <div style={{ margin: '15px' }}>
           <p>
