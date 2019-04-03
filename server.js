@@ -23,11 +23,18 @@ app.get('/users/topRanked', (req, res, next) => {
   User.findAll().then(users => res.send(users));
 });
 
-app.post('/users', (req, res, next) => {
-  User.create(req.body)
-    .then(user => res.send(user))
-    .catch(next);
-});
+// app.post('/users', (req, res, next) => {
+//   User.create(req.body)
+//     .then(user => res.send(user))
+//     .catch(next);
+// });
+
+// app.put('/users/:id', (req, res, next) => {
+//   User.findByPk(req.params.id)
+//     .then(user => user.udpate(req.body))
+//     .then(user => res.send(user))
+//     .catch(next);
+// });
 
 app.delete('/users/:id', (req, res, next) => {
   User.destroy({ where: { id: req.params.id } });

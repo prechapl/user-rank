@@ -1,10 +1,11 @@
-import React from "react";
-import { withRouter } from "react-router";
+import React from 'react';
+import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class Users extends React.Component {
   render() {
     // console.log('props via Users ', this.props);
-    console.log("history via Users ", this.props.history);
+    // console.log("history via Users ", this.props.history);
 
     return (
       <div>
@@ -25,7 +26,15 @@ class Users extends React.Component {
                       >
                         Delete
                       </button>
-                      <button
+                      {/* <button
+                        className="btn btn-outline-danger btn-sm"
+                        type="button"
+                        onClick={() => this.props.destroy(user.id)}
+                      >
+                        Delete
+                      </button> */}
+                      <Link to={`/users/${user.id}`}>Edit</Link>
+                      {/* <button
                         className="btn btn-outline-danger btn-sm"
                         type="button"
                         onClick={() =>
@@ -33,7 +42,7 @@ class Users extends React.Component {
                         }
                       >
                         Edit
-                      </button>
+                      </button> */}
                     </div>
                   </li>
                 </ul>

@@ -1,43 +1,54 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React, { Component } from 'react';
+import axios from 'axios';
 
 class Form extends Component {
   constructor(props) {
     super(props);
 
-    // console.log('user in form state', user);
-
-    this.state = {
-      name: "",
-      bio: "",
-      rank: 0
-    };
+    console.log('props in form constructor', this.props);
+    if (!this.props.id) {
+      this.state = {
+        name: '',
+        bio: '',
+        rank: 0
+      };
+    } else {
+      const user = this.props.user;
+      this.state = {
+        name: user ? user.name : '',
+        bio: user ? user.bio : '',
+        rank: user ? user.rank : 0
+      };
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
 
     // console.log('props in Form ', this.props);
-    console.log("history in Form ", history);
+    // console.log('history in Form ', history);
     // console.log('this.props.id in Form ', this.props.id);
   }
 
   componentDidUpdate(prevProps, nextProps) {
-    const users = this.props.users;
-    if (prevProps.id !== nextProps.id) {
-      const user = users.filter(_user => _user.id === this.props.id);
-      this.setState(user);
+    if (this.props.id && !prevProps.user && this.props.user) {
+      const user = this.props.user;
+      console.log('users in componentDidUpdate', user);
+      this.setState({
+        name: user ? user.name : '',
+        bio: user ? user.bio : '',
+        rank: user ? user.rank : 0
+      });
     }
-    // console.log("user in userToUpdate", user);
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
     const { name, bio, rank } = this.state;
     axios
-      .post("/users", { name, bio, rank })
+      .post('/users', { name, bio, rank })
       .then(res => res.data)
-      .then(() => this.props.history.push("/users"))
+      .then(() => this.props.history.push('/users'))
       .then(() => this.props.refreshUsers())
       .catch(e => console.log(e));
   }
@@ -48,17 +59,19 @@ class Form extends Component {
     axios
       .put(`/users/${this.props.id}`, { name, bio, rank })
       .then(res => res.data)
-      .then(() => this.props.history.push("/users"))
+      .then(() => this.props.history.push('/users'))
       .then(() => this.props.refreshUsers())
       .catch(e => console.log(e));
   }
 
   handleChange({ target }) {
-    console.log("target ", target.value);
+    console.log('target ', target.value);
     this.setState({ [target.name]: target.value });
   }
 
   render() {
+    const editMode = !!this.props.id;
+
     const name = this.state.name;
     const bio = this.state.bio;
     const rank = this.state.rank;
@@ -96,7 +109,7 @@ class Form extends Component {
           </div>
 
           <button type="submit" onChange={this.handleChange}>
-            Submit
+            {editMode ? 'Update' : 'Create'}
           </button>
         </form>
       </div>
