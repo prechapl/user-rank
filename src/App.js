@@ -16,16 +16,11 @@ class App extends Component {
     this.refreshUsers = this.refreshUsers.bind(this);
     this.destroyUser = this.destroyUser.bind(this);
     this.getTopRanked = this.getTopRanked.bind(this);
-    this.userToUpdate = this.userToUpdate.bind(this);
+    // this.userToUpdate = this.userToUpdate.bind(this);
   }
 
   componentDidMount() {
-    axios
-      .get('/users')
-      .then(res => res.data)
-      .then(users => this.setState({ users }))
-      .then(console.log('this.state.users in App.js CDM', this.state.users))
-      .catch();
+    this.refreshUsers();
   }
 
   refreshUsers() {
@@ -36,12 +31,22 @@ class App extends Component {
       .catch();
   }
 
-  userToUpdate(id) {
-    const users = this.state.users.slice();
-    const user = users.filter(_user => _user.id === id);
-    console.log('user in userToUpdate', user);
-    return user[0];
-  }
+  // userToUpdate(id) {
+  //   const users = this.state.users.slice();
+  //   const user = users.filter(_user => _user.id === id);
+  //   console.log('user in userToUpdate', user);
+  //   return user[0];
+  // }
+
+  onSave = user => {
+    return axios[user.id ? 'put' : 'post'](
+      `/users/${user.id ? user.id : ''}`,
+      user
+    ).then(res => {
+      this.refreshUsers();
+      return res.data;
+    });
+  };
 
   destroyUser(id) {
     axios
@@ -98,7 +103,11 @@ class App extends Component {
           <Route
             path="/create"
             render={({ history }) => (
-              <Form refreshUsers={this.refreshUsers} history={history} />
+              <Form
+                refreshUsers={this.refreshUsers}
+                history={history}
+                onSave={this.onSave}
+              />
             )}
           />
           <Route
@@ -106,6 +115,7 @@ class App extends Component {
             path="/users/:id"
             render={({ history, match }) => (
               <Form
+                onSave={this.onSave}
                 refreshUsers={this.refreshUsers}
                 history={history}
                 userToUpdate={this.userToUpdate}

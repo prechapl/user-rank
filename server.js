@@ -16,30 +16,34 @@ app.get('/', (req, res, next) =>
   res.sendFile(path.join(__dirname, 'index.html')));
 
 app.get('/users', (req, res, next) => {
-  User.findAll().then(users => res.send(users));
+  User.findAll()
+    .then(users => res.send(users))
+    .catch(next);
 });
 
 app.get('/users/topRanked', (req, res, next) => {
-  User.findAll().then(users => res.send(users));
+  User.findAll()
+    .then(users => res.send(users))
+    .catch(next);
 });
 
-// app.post('/users', (req, res, next) => {
-//   User.create(req.body)
-//     .then(user => res.send(user))
-//     .catch(next);
-// });
+app.post('/users', (req, res, next) => {
+  User.create(req.body)
+    .then(user => res.send(user))
+    .catch(next);
+});
 
-// app.put('/users/:id', (req, res, next) => {
-//   User.findByPk(req.params.id)
-//     .then(user => user.udpate(req.body))
-//     .then(user => res.send(user))
-//     .catch(next);
-// });
+app.put('/users/:id', (req, res, next) => {
+  User.findByPk(req.params.id)
+    .then(user => user.update(req.body))
+    .then(user => res.send(user))
+    .catch(next);
+});
 
 app.delete('/users/:id', (req, res, next) => {
-  User.destroy({ where: { id: req.params.id } });
-  res.sendStatus(204);
-  next();
+  User.destroy({ where: { id: req.params.id } })
+    .then(() => res.sendStatus(204))
+    .catch(next);
 });
 
 app.listen(port, () => console.log(`listening on port ${port}`));

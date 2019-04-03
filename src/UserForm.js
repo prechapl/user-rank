@@ -22,16 +22,16 @@ class Form extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleUpdate = this.handleUpdate.bind(this);
 
     // console.log('props in Form ', this.props);
     // console.log('history in Form ', history);
     // console.log('this.props.id in Form ', this.props.id);
   }
 
-  componentDidUpdate(prevProps, nextProps) {
-    if (this.props.id && !prevProps.user && this.props.user) {
+  componentDidUpdate(prevProps) {
+    if (this.props.id && !prevProps.user) {
       const user = this.props.user;
       console.log('users in componentDidUpdate', user);
       this.setState({
@@ -42,27 +42,42 @@ class Form extends Component {
     }
   }
 
-  handleSubmit(evt) {
-    evt.preventDefault();
-    const { name, bio, rank } = this.state;
-    axios
-      .post('/users', { name, bio, rank })
-      .then(res => res.data)
-      .then(() => this.props.history.push('/users'))
-      .then(() => this.props.refreshUsers())
-      .catch(e => console.log(e));
-  }
+  // handleSubmit(evt) {
+  //   evt.preventDefault();
+  //   const { name, bio, rank } = this.state;
+  //   axios
+  //     .post('/users', { name, bio, rank })
+  //     .then(res => res.data)
+  //     .then(() => this.props.history.push('/users'))
+  //     .then(() => this.props.refreshUsers())
+  //     .catch(e => console.log(e));
+  // }
 
-  handleUpdate(evt) {
-    evt.preventDefault();
-    const { name, bio, rank } = this.state;
-    axios
-      .put(`/users/${this.props.id}`, { name, bio, rank })
-      .then(res => res.data)
+  // handleUpdate(evt) {
+  //   evt.preventDefault();
+  //   const user = this.props.user;
+  //   axios.put('/users/:id', (req, res, next) => {
+  //     User.findByPk(req.params.id)
+  //       .then(user => user.udpate(req.body))
+  //       .then(user => res.send(user))
+  //       .catch(next);
+  //   });
+  // .then(() => this.props.history.push('/users'))
+  // .then(() => this.props.refreshUsers())
+  // .catch(e => console.log(e));
+  // }
+
+  onSave = ev => {
+    ev.preventDefault();
+    const user = { ...this.state };
+    if (this.props.id) {
+      user.id = this.props.id;
+    }
+    this.props
+      .onSave(user)
       .then(() => this.props.history.push('/users'))
-      .then(() => this.props.refreshUsers())
       .catch(e => console.log(e));
-  }
+  };
 
   handleChange({ target }) {
     console.log('target ', target.value);
@@ -71,14 +86,14 @@ class Form extends Component {
 
   render() {
     const editMode = !!this.props.id;
-
+    // const onSave = this;
     const name = this.state.name;
     const bio = this.state.bio;
     const rank = this.state.rank;
 
     return (
       <div>
-        <form onSubmit={!this.props.id ? this.handleSubmit : this.handleUpdate}>
+        <form onSubmit={this.onSave}>
           <div className="form-group">
             <label htmlFor="name"> Name: </label>
             <input
