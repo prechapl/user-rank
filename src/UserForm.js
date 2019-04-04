@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 class Form extends Component {
@@ -10,24 +11,20 @@ class Form extends Component {
       this.state = {
         name: '',
         bio: '',
-        rank: 0
+        rank: 0,
+        errors: []
       };
     } else {
       const user = this.props.user;
       this.state = {
         name: user ? user.name : '',
         bio: user ? user.bio : '',
-        rank: user ? user.rank : 0
+        rank: user ? user.rank : 0,
+        errors: []
       };
     }
 
     this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleUpdate = this.handleUpdate.bind(this);
-
-    // console.log('props in Form ', this.props);
-    // console.log('history in Form ', history);
-    // console.log('this.props.id in Form ', this.props.id);
   }
 
   componentDidUpdate(prevProps) {
@@ -37,35 +34,11 @@ class Form extends Component {
       this.setState({
         name: user ? user.name : '',
         bio: user ? user.bio : '',
-        rank: user ? user.rank : 0
+        rank: user ? user.rank : 0,
+        errors: []
       });
     }
   }
-
-  // handleSubmit(evt) {
-  //   evt.preventDefault();
-  //   const { name, bio, rank } = this.state;
-  //   axios
-  //     .post('/users', { name, bio, rank })
-  //     .then(res => res.data)
-  //     .then(() => this.props.history.push('/users'))
-  //     .then(() => this.props.refreshUsers())
-  //     .catch(e => console.log(e));
-  // }
-
-  // handleUpdate(evt) {
-  //   evt.preventDefault();
-  //   const user = this.props.user;
-  //   axios.put('/users/:id', (req, res, next) => {
-  //     User.findByPk(req.params.id)
-  //       .then(user => user.udpate(req.body))
-  //       .then(user => res.send(user))
-  //       .catch(next);
-  //   });
-  // .then(() => this.props.history.push('/users'))
-  // .then(() => this.props.refreshUsers())
-  // .catch(e => console.log(e));
-  // }
 
   onSave = ev => {
     ev.preventDefault();
@@ -76,7 +49,9 @@ class Form extends Component {
     this.props
       .onSave(user)
       .then(() => this.props.history.push('/users'))
-      .catch(e => console.log(e));
+      .catch(e => {
+        this.setState({ errors: e.response.data.errors });
+      });
   };
 
   handleChange({ target }) {
@@ -86,7 +61,7 @@ class Form extends Component {
 
   render() {
     const editMode = !!this.props.id;
-    // const onSave = this;
+    const errors = this.state.errors;
     const name = this.state.name;
     const bio = this.state.bio;
     const rank = this.state.rank;
@@ -94,6 +69,13 @@ class Form extends Component {
     return (
       <div>
         <form onSubmit={this.onSave}>
+          {!!errors.length && (
+            <ul className="alert alert-danger">
+              {errors.map(error => (
+                <li>{error}</li>
+              ))}
+            </ul>
+          )}
           <div className="form-group">
             <label htmlFor="name"> Name: </label>
             <input
@@ -123,9 +105,16 @@ class Form extends Component {
             />
           </div>
 
-          <button type="submit" onChange={this.handleChange}>
+          <button
+            type="submit"
+            className="btn btn-outline-success btn-sm"
+            onChange={this.handleChange}
+          >
             {editMode ? 'Update' : 'Create'}
           </button>
+          <Link to="/users" className="btn btn-outline-warning btn-sm">
+            Cancel
+          </Link>
         </form>
       </div>
     );

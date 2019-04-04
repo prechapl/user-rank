@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { HashRouter as Router, Route, Link } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import Users from './Users';
 import Home from './Home';
 import Nav from './Nav';
@@ -16,7 +16,6 @@ class App extends Component {
     this.refreshUsers = this.refreshUsers.bind(this);
     this.destroyUser = this.destroyUser.bind(this);
     this.getTopRanked = this.getTopRanked.bind(this);
-    // this.userToUpdate = this.userToUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -30,13 +29,6 @@ class App extends Component {
       .then(users => this.setState({ users }))
       .catch();
   }
-
-  // userToUpdate(id) {
-  //   const users = this.state.users.slice();
-  //   const user = users.filter(_user => _user.id === id);
-  //   console.log('user in userToUpdate', user);
-  //   return user[0];
-  // }
 
   onSave = user => {
     return axios[user.id ? 'put' : 'post'](
@@ -75,11 +67,18 @@ class App extends Component {
   render() {
     const users = this.state.users;
     const topRanked = this.getTopRanked();
+    const userCount = this.state.users.length;
+    // console.log('userCount', this.userCount());
+    console.log('ranked ', topRanked[0]);
 
     return (
       <Router>
         <Fragment>
-          <Route component={Nav} />
+          <Route
+            render={({ location }) => (
+              <Nav userCount={userCount} location={location} />
+            )}
+          />
           <Route exact path="/home" component={Home} />
           <Route
             exact
@@ -88,14 +87,13 @@ class App extends Component {
               <Users
                 users={users}
                 destroy={this.destroyUser}
-                userToUpdate={this.userToUpdate}
                 history={history}
               />
             )}
           />
           <Route
             exact
-            path="/topranked"
+            path="/ranked"
             render={() => (
               <TopRanked topranked={topRanked} destroy={this.destroyUser} />
             )}
@@ -118,7 +116,6 @@ class App extends Component {
                 onSave={this.onSave}
                 refreshUsers={this.refreshUsers}
                 history={history}
-                userToUpdate={this.userToUpdate}
                 id={match.params.id}
                 user={users.find(u => u.id === match.params.id * 1)}
               />

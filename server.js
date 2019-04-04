@@ -21,7 +21,7 @@ app.get('/users', (req, res, next) => {
     .catch(next);
 });
 
-app.get('/users/topRanked', (req, res, next) => {
+app.get('/users/ranked', (req, res, next) => {
   User.findAll()
     .then(users => res.send(users))
     .catch(next);
@@ -44,6 +44,18 @@ app.delete('/users/:id', (req, res, next) => {
   User.destroy({ where: { id: req.params.id } })
     .then(() => res.sendStatus(204))
     .catch(next);
+});
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  console.log(Object.keys(error));
+  let errors = [error];
+  if (error.errors) {
+    errors = error.errors.map(_error => _error.message);
+  } else if (error.original) {
+    errors = [error.original.message];
+  }
+  res.status(error.status || 500).send({ errors });
 });
 
 app.listen(port, () => console.log(`listening on port ${port}`));
